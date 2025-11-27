@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Real-Time Stock Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1> Real-Time Stock Dashboard</h1>
+<form method="POST">
+    <label for="ticker">Select Stock:</label>
+    <select name="ticker" id="ticker" required>
+        {% for stock in stocks %}
+            <option value="{{ stock.ticker }}" {% if ticker == stock.ticker %}selected{% endif %}>
+                {{ stock.name }}
+            </option>
+        {% endfor %}
+    </select>
+    <button type="submit">Get Data</button>
+</form>
+
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    {% if data %}
+        <h2>Live Stock Data: {{ ticker }}</h2>
+        <label for="chartType">Chart Type:</label>
+        <select id="chartType" onchange="toggleChart(this.value)">
+            <option value="candlestick">Candlestick</option>
+            <option value="line">Line Chart</option>
+        </select>
+
+        <div id="stock-chart" style="height:500px;"></div>
+
+        <script>
+            const stockData = {{ data | tojson }};
+            const dates = stockData.map(row => row.Datetime);
+            const open = stockData.map(row => row.Open);
+            const high = stockData.map(row => row.High);
+            const low = stockData.map(row => row.Low);
+            const close = stockData.map(row => row.Close);
+            const volume = stockData.map(row => row.Volume);
+
+            function toggleChart(type) {
+                let mainTrace;
+                if (type === 'line') {
+                    mainTrace = {
+                        x: dates,
+                        y: close,
+                        type: 'scatter',
+                        mode: 'lines',
+                        name: '{{ ticker }} Close Price',
+                        line: { color: '#007bff' }
+                    };
+                } else {
+                    mainTrace = {
+                        x: dates,
+                        open: open,
+                        high: high,
+                        low: low,
+                        close: close,
+                        type: 'candlestick',
+                        name: '{{ ticker }} Candlestick',
+                        increasing: { line: { color: 'green' } },
+                        decreasing: { line: { color: 'red' } }
+                    };
+                }
+
+                const volumeTrace = {
+                    x: dates,
+                    y: volume,
+                    type: 'bar',
+                    name: 'Volume',
+                    yaxis: 'y2',
+                    marker: { color: '#ccc' },
+                    opacity: 0.4
+                };
+
+                const layout = {
+                    title: '{{ ticker }} - Real-Time Chart',
+                    xaxis: { title: 'Datetime' },
+                    yaxis: { title: 'Price (USD)' },
+                    yaxis2: {
+                        title: 'Volume',
+                        overlaying: 'y',
+                        side: 'right',
+                        showgrid: false
+                    },
+                    legend: { orientation: 'h' },
+                    margin: { t: 40, l: 50, r: 50, b: 40 },
+                    height: 500
+                };
+
+                Plotly.newPlot('stock-chart', [mainTrace, volumeTrace], layout);
+            }
+
+            toggleChart('candlestick'); // Default chart
+        </script>
+    {% endif %}
+</body>
+</html>

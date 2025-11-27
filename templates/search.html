@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Stocks</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1> Search Stocks</h1>
+    <form method="POST">
+        <label for="search">Search for a stock:</label>
+        <input type="text" id="search" name="search" placeholder="Enter stock name or ticker" required>
+        <button type="submit">Search</button>
+    </form>
+
+    {% if query %}
+        <h2>Search Results for "{{ query }}"</h2>
+        {% if results %}
+            <ul>
+                {% for stock in results %}
+                    <li>
+                        <strong>{{ stock.name }}</strong> ({{ stock.ticker }})
+                        <ul>
+                            <li>Current Price: {{ stock.current_price }}</li>
+                            <li>Market Cap: {{ stock.market_cap }}</li>
+                            <li>P/E Ratio: {{ stock.pe_ratio }}</li>
+                            <li>Dividend Yield: {{ stock.dividend_yield }}</li>
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No results found.</p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>

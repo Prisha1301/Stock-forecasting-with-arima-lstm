@@ -1,0 +1,282 @@
+/* General Styles */
+body {
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #18181a 0%, #3b3b3d 60%, #a6a6aa 100%);
+    color: #f4f4f4;
+    line-height: 1.7;
+    min-height: 100vh;
+    letter-spacing: 0.02em;
+}
+
+h1, h2, h3 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 24px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
+/* Navbar */
+nav {
+    background: linear-gradient(90deg, #18181a 0%, #2b2b36 60%, #2b2b44 100%);
+    padding: 14px 32px;
+    text-align: center;
+    border-radius: 12px;
+    margin: 32px auto 28px auto;
+    max-width: 900px;
+    border: 1.5px solid #232326;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+}
+
+nav a {
+    color: #e0e0e0;
+    margin: 0 18px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s, background 0.2s;
+    padding: 8px 18px;
+    border-radius: 6px;
+    background: rgba(44, 44, 46, 0.25);
+    font-size: 1.08em;
+    letter-spacing: 0.03em;
+}
+
+nav a:hover, nav a.active {
+    color: #fff;
+    background: rgba(120, 120, 125, 0.35);
+    text-shadow: 0 0 8px rgba(255,255,255,0.18);
+}
+
+/* Dropdown Menu Styles */
+form select {
+    background: linear-gradient(135deg, #232326 0%, #44444a 100%);
+    color: #fff;
+    border: 1.5px solid #232326;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 1.05em;
+    appearance: none;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(28,28,29,0.18);
+    margin-bottom: 18px;
+    transition: border 0.2s;
+}
+
+form select:focus {
+    border: 1.5px solid #79797d;
+    outline: none;
+}
+
+form select option {
+    background: #232326;
+    color: #f4f4f4;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 16px 0 10px 0;
+    background: linear-gradient(90deg, #18181a 0%, #232326 60%, #44444a 100%);
+    color: #b1b1b4;
+    margin-top: 40px;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.25);
+    border-top: 1.5px solid #232326;
+    font-size: 1em;
+    border-radius: 0 0 12px 12px;
+}
+
+footer a {
+    color: #b1b1b4;
+    font-weight: 500;
+    transition: color 0.2s;
+    text-decoration: underline;
+}
+
+footer a:hover {
+    color: #fff;
+}
+
+/* Form Styles */
+form {
+    max-width: 520px;
+    margin: 28px auto;
+    padding: 28px 28px 18px 28px;
+    background: rgba(36, 36, 38, 0.92);
+    border: 1.5px solid #232326;
+    border-radius: 12px;
+    box-shadow: 0 6px 32px rgba(0,0,0,0.32);
+}
+
+form label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #e0e0e0;
+    font-size: 1.04em;
+}
+
+form input, form select, form button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    border: 1.5px solid #232326;
+    border-radius: 6px;
+    font-size: 1.05em;
+    background: rgba(44, 44, 46, 0.18);
+    color: #fff;
+    transition: border 0.2s;
+}
+
+form input:focus, form select:focus {
+    border: 1.5px solid #79797d;
+    outline: none;
+}
+
+form button {
+    background: linear-gradient(90deg, #232326 0%, #79797d 100%);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(28,28,29,0.12);
+}
+
+form button:hover {
+    background: linear-gradient(90deg, #79797d 0%, #232326 100%);
+    box-shadow: 0 4px 16px rgba(120,120,125,0.18);
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 28px 0;
+    background: rgba(44, 44, 46, 0.18);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 6px 32px rgba(0,0,0,0.22);
+}
+
+table th, table td {
+    padding: 14px 18px;
+    text-align: center;
+    border: 1px solid #232326;
+    color: #f4f4f4;
+    font-size: 1.01em;
+}
+
+table th {
+    background: linear-gradient(90deg, #232326 0%, #79797d 100%);
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+}
+
+table tr:nth-child(even) {
+    background-color: rgba(36, 36, 38, 0.32);
+}
+
+table tr:hover {
+    background-color: rgba(120, 120, 125, 0.13);
+    transition: background 0.2s;
+}
+
+/* Chart Container */
+#forecast-chart, #candlestick-chart, #technical-chart, #stock-chart {
+    margin: 28px auto;
+    padding: 24px;
+    max-width: 900px;
+    border: 1.5px solid #232326;
+    border-radius: 12px;
+    background: rgba(44, 44, 46, 0.18);
+    box-shadow: 0 6px 32px rgba(0,0,0,0.22);
+}
+
+/* Buttons */
+button {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #232326 0%, #79797d 100%);
+    color: #fff;
+    font-size: 1.05em;
+    cursor: pointer;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(28,28,29,0.12);
+}
+
+button:hover {
+    background: linear-gradient(90deg, #79797d 0%, #232326 100%);
+    box-shadow: 0 4px 16px rgba(120,120,125,0.18);
+}
+
+/* Background for Sections */
+section {
+    padding: 24px;
+    margin: 28px 0;
+    background: rgba(44, 44, 46, 0.18);
+    border-radius: 12px;
+    box-shadow: 0 6px 32px rgba(0,0,0,0.22
+
+/* Chart Container */
+#forecast-chart, #candlestick-chart, #technical-chart {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 800px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: #fff;
+    margin-top: 20px;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+}
+
+footer a {
+    color: #59422d;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: #fff;
+}
+
+/* Buttons */
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #6a11cb;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #2575fc;
+}
+
+/* Background for Sections */
+section {
+    padding: 20px;
+    margin: 20px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Technical Analysis</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        select, button {
+            padding: 8px 15px;
+            margin: 0 10px;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0069d9;
+        }
+        .flashes {
+            list-style: none;
+            padding: 10px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <h1>Technical Analysis Dashboard</h1>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <label for="ticker"><strong>Select Stock:</strong></label>
+       <select name="ticker" id="ticker" required>
+    {% for stock in stocks %}
+        <option value="{{ stock.ticker }}" {% if ticker == stock.ticker %}selected{% endif %}>
+            {{ stock.name }}
+        </option>
+    {% endfor %}
+</select>
+        <button type="submit">Analyze</button>
+    </form>
+
+    {% if data %}
+        <h2>Technical Analysis for {{ ticker }}</h2>
+        
+        <div class="chart-container">
+            <h3 class="chart-title">Price & Moving Averages</h3>
+            <div id="priceChart"></div>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="chart-title">Bollinger Bands</h3>
+            <div id="bollingerChart"></div>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="chart-title">Momentum Indicators</h3>
+            <div id="momentumChart"></div>
+        </div>
+
+     
+        <div class="chart-container">
+            <h3 class="chart-title">Volatility</h3>
+            <div id="volatilityChart"></div>
+        </div>
+
+        <div class="chart-container">
+            <h3 class="chart-title">MACD</h3>
+            <div id="macdChart"></div>
+        </div>
+
+        <script>
+       
+            const techData = {{ data | tojson }};
+            const dates = techData.map(item => item.Date);
+            const closes = techData.map(item => item.Close);
+            const ma20 = techData.map(item => item.MA_20);
+            const ma50 = techData.map(item => item.MA_50);
+            const ma200 = techData.map(item => item.MA_200);
+            const upperBand = techData.map(item => item.Upper_Band);
+            const lowerBand = techData.map(item => item.Lower_Band);
+            const trendline = techData.map(item => item.Trendline);
+            const rsi = techData.map(item => item.RSI);
+            const macd = techData.map(item => item.MACD);
+            const signalLine = techData.map(item => item.Signal_Line);
+            const macdHist = techData.map(item => item.MACD_Hist);
+            const volatility = techData.map(item => item.Volatility);
+
+         
+            Plotly.newPlot('priceChart', [
+                {
+                    x: dates,
+                    y: closes,
+                    name: 'Close Price',
+                    line: {color: '#1f77b4', width: 2}
+                },
+                {
+                    x: dates,
+                    y: ma20,
+                    name: '20-Day MA',
+                    line: {color: '#ff7f0e', width: 1.5}
+                },
+                {
+                    x: dates,
+                    y: ma50,
+                    name: '50-Day MA',
+                    line: {color: '#2ca02c', width: 1.5}
+                },
+                {
+                    x: dates,
+                    y: ma200,
+                    name: '200-Day MA',
+                    line: {color: '#d62728', width: 1.5}
+                }
+            ], {
+                title: 'Price with Moving Averages',
+                xaxis: {title: 'Date'},
+                yaxis: {title: 'Price ($)'},
+                showlegend: true,
+                height: 400,
+                margin: {t: 40, b: 60}
+            });
+
+            // Bollinger Bands Chart
+            Plotly.newPlot('bollingerChart', [
+                {
+                    x: dates,
+                    y: closes,
+                    name: 'Close Price',
+                    line: {color: '#1f77b4', width: 2}
+                },
+                {
+                    x: dates,
+                    y: upperBand,
+                    name: 'Upper Band',
+                    line: {color: '#9467bd', dash: 'dash', width: 1}
+                },
+                {
+                    x: dates,
+                    y: lowerBand,
+                    name: 'Lower Band',
+                    line: {color: '#9467bd', dash: 'dash', width: 1}
+                },
+                {
+                    x: dates,
+                    y: trendline,
+                    name: 'Trendline',
+                    line: {color: '#2ca02c', width: 2}
+                }
+            ], {
+                title: 'Bollinger Bands with Trendline',
+                xaxis: {title: 'Date'},
+                yaxis: {title: 'Price ($)'},
+                showlegend: true,
+                height: 400,
+                margin: {t: 40, b: 60}
+            });
+
+            // Momentum Indicators Chart
+            Plotly.newPlot('momentumChart', [
+                {
+                    x: dates,
+                    y: rsi,
+                    name: 'RSI (14-day)',
+                    line: {color: '#e377c2', width: 2},
+                    yaxis: 'y1'
+                },
+                {
+                    x: dates,
+                    y: Array(rsi.length).fill(70),
+                    name: 'Overbought',
+                    line: {color: '#ff0000', dash: 'dot', width: 1},
+                    yaxis: 'y1'
+                },
+                {
+                    x: dates,
+                    y: Array(rsi.length).fill(30),
+                    name: 'Oversold',
+                    line: {color: '#00aa00', dash: 'dot', width: 1},
+                    yaxis: 'y1'
+                }
+            ], {
+                title: 'Momentum Indicators',
+                xaxis: {title: 'Date'},
+                yaxis: {
+                    title: 'RSI Value',
+                    range: [0, 100]
+                },
+                showlegend: true,
+                height: 400,
+                margin: {t: 40, b: 60}
+            });
+
+            // Volatility Chart
+            Plotly.newPlot('volatilityChart', [
+                {
+                    x: dates,
+                    y: volatility,
+                    name: '20-Day Volatility',
+                    line: {color: '#d62728', width: 2},
+                    fill: 'tozeroy'
+                }
+            ], {
+                title: '20-Day Historical Volatility',
+                xaxis: {title: 'Date'},
+                yaxis: {title: 'Volatility'},
+                showlegend: true,
+                height: 400,
+                margin: {t: 40, b: 60}
+            });
+
+            // MACD Chart
+            Plotly.newPlot('macdChart', [
+                {
+                    x: dates,
+                    y: macd,
+                    name: 'MACD',
+                    line: {color: '#1f77b4', width: 1.5}
+                },
+                {
+                    x: dates,
+                    y: signalLine,
+                    name: 'Signal Line',
+                    line: {color: '#ff7f0e', width: 1.5}
+                },
+                {
+                    x: dates,
+                    y: macdHist,
+                    name: 'MACD Histogram',
+                    type: 'bar',
+                    marker: {
+                        color: macdHist.map(val => val >= 0 ? '#2ca02c' : '#d62728')
+                    }
+                }
+            ], {
+                title: 'MACD (12, 26, 9)',
+                xaxis: {title: 'Date'},
+                yaxis: {title: 'Value'},
+                showlegend: true,
+                height: 400,
+                margin: {t: 40, b: 60}
+            });
+        </script>
+    {% endif %}
+</body>
+</html>

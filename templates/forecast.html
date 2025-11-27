@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Forecast</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1>Stock Price Forecast</h1>
+    <form method="POST">
+        <label for="ticker">Select Stock:</label>
+       <select name="ticker" id="ticker" required>
+    {% for stock in stocks %}
+        <option value="{{ stock.ticker }}" {% if ticker == stock.ticker %}selected{% endif %}>
+            {{ stock.name }}
+        </option>
+    {% endfor %}
+</select>
+
+        <label for="model">Select Model:</label>
+        <select name="model" id="model" required>
+            <option value="arima">ARIMA</option>
+            <option value="lstm">LSTM</option>
+        </select>
+        <button type="submit">Get Forecast</button>
+    </form>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    {% if forecast %}
+        <h2>Forecast for {{ ticker }} (Model: {{ model }})</h2>
+        <div id="forecast-chart"></div>
+        <script>
+            var forecastData = {{ forecast | tojson }};
+            var dates = forecastData.map(item => item.ds);
+            var prices = forecastData.map(item => item.yhat);
+
+            var trace = {
+                x: dates,
+                y: prices,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Forecasted Prices'
+            };
+
+            var layout = {
+                title: 'Stock Price Forecast',
+                xaxis: { title: 'Date' },
+                yaxis: { title: 'Price (USD)' }
+            };
+
+            Plotly.newPlot('forecast-chart', [trace], layout);
+        </script>
+    {% endif %}
+</body>
+</html>
